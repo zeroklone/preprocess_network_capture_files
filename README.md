@@ -14,3 +14,12 @@ output_file_name = 'filename.csv'
 sncf = SerialiseNetworkCaptureFile(input_dirctory_name, input_file_name, output_directory_name, output_file_name)
 sncf.serialise()
 ```
+
+The Ethernet frame has the following headers:
+
+Header | Data Type | Description
+---------- | ---------- | ----------------
+time_stamp | int |Number of seconds since Unix epoch
+destination | bytes string | Might be a MAC address
+source | bytes string | I can't decode. Might be a MAC address
+type | int | IP/MAC version being used
