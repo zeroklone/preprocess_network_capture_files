@@ -27,7 +27,7 @@ type | int | IP/MAC version being used
 The IP frame has the following headers:
 
 Header | Data Type | Description
----------- | --------------- | ----------------     
+--- | --- | ---     
 _v_hl | int | Contains version and IHL bit strings.
 version | str (4 bits) | The IP version number bit string.
 ihl | str (4 bits) | Internet Header Length.
