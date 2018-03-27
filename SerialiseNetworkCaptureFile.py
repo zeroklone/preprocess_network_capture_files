@@ -32,13 +32,13 @@ class SerialiseNetworkCaptureFile:
         self.pcap_filename = pcap_filename
         self.output_filename = output_filename
 
-        with open(self.pcap_path+self.pcap_filename, "rb") as capture_file:
+        with open(self.pcap_path+self.pcap_filename, 'rb') as capture_file:
             self.pcap = dpkt.pcap.Reader(capture_file)
 
         
     #-------------------------------------------------------------------------
     def __inet_to_ip(self, address, version):
-        if version == "0100":
+        if version == '0100':
             string_address = socket.inet_ntoa(address)
         else:
             string_address = socket.inet_ntop(socket.AF_INET6, address)
@@ -46,28 +46,28 @@ class SerialiseNetworkCaptureFile:
         return string_address
     #-------------------------------------------------------------------------
     def __bytes_mac_to_string_mac(self, bytes_mac_address):
-        mac_address = ""
+        mac_address = ''
         for element in bytes_mac_address:
-            hex_element = format(element,"02x")
-            mac_address = mac_address + ":" + str(hex_element)
+            hex_element = format(element,'02x')
+            mac_address = mac_address + ':' + str(hex_element)
         mac_address = mac_address[1:]
         return mac_address
     #-------------------------------------------------------------------------
     def __to_bits(self, number):
-        bits = "{0:b}".format(number)
+        bits = '{0:b}'.format(number)
         return bits
     #-------------------------------------------------------------------------
     def __expand_v_hl(self, _v_hl):
         #Hmm
         bit_string = self.__to_bits(_v_hl)
-        bit_string = self.__pad_string(bit_string, 8, "0", "left")
+        bit_string = self.__pad_string(bit_string, 8, '0', 'left')
         version = bit_string[0:4]
         ihl = bit_string[4:8]
         return version, ihl
     #-------------------------------------------------------------------------
     def __expand_tos(self, tos):
         bit_string = self.__to_bits(tos)
-        bit_string = self.__pad_string(bit_string, 8, "0", "left")
+        bit_string = self.__pad_string(bit_string, 8, '0', 'left')
         dscp = bit_string[0:6]
         ecn = bit_string[6:8]
         return dscp, ecn
@@ -78,7 +78,7 @@ class SerialiseNetworkCaptureFile:
     #-------------------------------------------------------------------------
     def __expand_tcp_flags(self, flags):
         bit_string = self.__to_bits(flags)
-        bit_string = self.__pad_string(bit_string, 8, "0", "left")
+        bit_string = self.__pad_string(bit_string, 8, '0', 'left')
         
         CWR = bit_string[0]
         ECE = bit_string[1]
@@ -93,9 +93,9 @@ class SerialiseNetworkCaptureFile:
     #-------------------------------------------------------------------------
     def __pad_string(self, string, target_length, replacement, side):
         #Things may go badly of the string is longer that the target length.
-        if side == "left":
+        if side == 'left':
             string = replacement*(target_length - len(string)) + string
-        elif side == "right":
+        elif side == 'right':
             string = string + replacement*(target_length - len(string))
 
         return string
@@ -105,7 +105,7 @@ class SerialiseNetworkCaptureFile:
             icmp = eth.ip.icmp
             icmp_contents = [icmp.type, icmp.code, icmp.sum]
         except AttributeError:
-            icmp_contents = ["" for i in range(3)]
+            icmp_contents = ['' for i in range(3)]
         
         return icmp_contents
     #-------------------------------------------------------------------------
@@ -113,13 +113,13 @@ class SerialiseNetworkCaptureFile:
         try:
             tcp = eth.ip.tcp
             # options_list = dpkt.tcp.parse_opts(tcp.opts)
-            options_list = ""
+            options_list = ''
             tcp_flags  = self.__expand_tcp_flags(tcp.flags)
             tcp_contents = [tcp.sport, tcp.dport, tcp.seq, tcp.ack, tcp.off,
                             self.__bit_to_int(tcp_flags), tcp.sum, tcp.urp, 
                             options_list]
         except AttributeError:
-            tcp_contents = ["" for i in range(9)]
+            tcp_contents = ['' for i in range(9)]
 
         return tcp_contents
     #-------------------------------------------------------------------------
@@ -128,11 +128,11 @@ class SerialiseNetworkCaptureFile:
             udp = eth.ip.udp
             udp_contents =[udp.sport, udp.dport, udp.sum, udp.ulen]
         except AttributeError:
-            udp_contents = ["" for i in range(4)]
+            udp_contents = ['' for i in range(4)]
         return udp_contents
     #-------------------------------------------------------------------------
     def __serialise_ethernet(self, ts, eth):
-        """ ethernet has the following in it:
+        ''' ethernet has the following in it:
             
             time_stamp
             int
@@ -149,18 +149,18 @@ class SerialiseNetworkCaptureFile:
             Type
             int
             IP/MAC version being used
-        """
+        '''
         try:
             src = self.__bytes_mac_to_string_mac(eth.src)
             dst = self.__bytes_mac_to_string_mac(eth.dst)
             eth_contents = [ts, src, dst, eth.type]
         except AttributeError:
-            eth_contents = ["" for i in range(4)]
+            eth_contents = ['' for i in range(4)]
 
         return eth_contents
     #-------------------------------------------------------------------------
     def __serialise_ip(self, eth):
-        """ ip  has the following in it:
+        ''' ip  has the following in it:
         
             _v_hl
             int (representing 8 bits)
@@ -227,7 +227,7 @@ class SerialiseNetworkCaptureFile:
             destination
             str
             Destination IP address 
-        """
+        '''
         try:
             ip = eth.ip
             version, ihl = self.__expand_v_hl(ip._v_hl)
@@ -240,27 +240,27 @@ class SerialiseNetworkCaptureFile:
                             self.__bit_to_int(ecn), ip.len,
                             ip.id, ip.off, ip.ttl, ip.p, ip.sum, src, dst]
         except AttributeError:
-            ip_contents = ["" for i in range(14)]
+            ip_contents = ['' for i in range(14)]
         return ip_contents
     #-------------------------------------------------------------------------       
     def serialise(self):
         logger = logging.getLogger()
         index = 0
-        columns = ("time_stamp,eth.source,eth.destination,"
-            "eth.type,ip._v_hl,ip.version,ip.ihl,ip.tos,"
-            "ip.dscp,ip.ecn,ip.length,ip.identification,"
-            "ip.offset,ip.ttl,ip.protocol,ip.checksum,"
-            "ip.source,ip.destination,icmp.type,icmp.code,"
-            "icmp.checksum,tcp.source_port,"
-            "tcp.destination_port,tcp.sequence,tcp.acknowledge,"
-            "tcp.offset,tcp.flags,tcp.checksum,tcp.urgent_point,"
-            "tcp.options,udp.source_port,udp.destination_port,"
-            "udp.checksum,udp.ulen,filename,index_in_file")
+        columns = ('time_stamp,eth.source,eth.destination,'
+            'eth.type,ip._v_hl,ip.version,ip.ihl,ip.tos,'
+            'ip.dscp,ip.ecn,ip.length,ip.identification,'
+            'ip.offset,ip.ttl,ip.protocol,ip.checksum,'
+            'ip.source,ip.destination,icmp.type,icmp.code,'
+            'icmp.checksum,tcp.source_port,'
+            'tcp.destination_port,tcp.sequence,tcp.acknowledge,'
+            'tcp.offset,tcp.flags,tcp.checksum,tcp.urgent_point,'
+            'tcp.options,udp.source_port,udp.destination_port,'
+            'udp.checksum,udp.ulen,filename,index_in_file')
 
-        with open(self.output_path+self.output_filename, "a") as text_file:
-            # columns_as_string = str(columns)[1:len(str(columns))-1] + "\n"
+        with open(self.output_path+self.output_filename, 'a') as text_file:
+            # columns_as_string = str(columns)[1:len(str(columns))-1] + '\n'
             print("printing columns")
-            text_file.write(columns+"\n")
+            text_file.write(columns+'\n')
             for ts,buf in self.pcap:
                 try:
                     eth = dpkt.ethernet.Ethernet(buf)
@@ -272,14 +272,14 @@ class SerialiseNetworkCaptureFile:
                     packet += self.__serialise_udp(eth)
                     packet += [self.pcap_filename, index] 
                 except TypeError:
-                    packet = ["" for i in range(34)]
+                    packet = ['' for i in range(34)]
                     packet += [self.pcap_filename, index]
                 except Exception as e:
                     logger.error('{}'.format(str(e)))
                     print("probable blank line, skipping")
                     continue
                 # print("Building packet string...")
-                packet_as_string = (str(packet)[1:len(str(packet))-1]).replace("\'","") + "\n"
+                packet_as_string = (str(packet)[1:len(str(packet))-1]).replace('\'','') + '\n'
                 text_file.write(packet_as_string)
                 index += 1
 
