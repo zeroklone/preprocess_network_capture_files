@@ -20,6 +20,25 @@ The Ethernet frame has the following headers:
 Header | Data Type | Description
 ---------- | ---------- | ----------------
 time_stamp | int |Number of seconds since Unix epoch
-destination | bytes string | Might be a MAC address
-source | bytes string | I can't decode. Might be a MAC address
+destination | bytes string | MAC address
+source | bytes string | MAC address
 type | int | IP/MAC version being used
+
+The IP frame has the following headers:
+
+Header | Data Type | Description
+---------- | ---------- | ----------------     
+_v_hl | int (representing 8 bits) | Contains version and IHL
+version | str (binary, representing 4 bits) | The IP version number (currently binary 0100 (4), but can now also be version6). All nodes must use the same version.
+ihl | str (binary, reprenting 4 bits) | The length of the entire IP header in 32-bit words
+tos | int (representing 8 bits) | Type of Service. Now deprecated. Before it was deprecated the first three bits indicated Precedence and the next five TOS. Bits 0-5 now contain DSCP, bits 6-7 ECN.(will split)
+dscp | str (representing 6 bits) | six-bit Differentiated Services Code Point (DSCP). Extracted from tos.
+ecn (representing 2 bits) | str | two-bit Explicit Congestion Notification (ECN). Extracted from tos
+length | int | number of octets that the IP datagram takes up including the header. The maximum size that an IP datagram can be is 65,535 octets.
+identification | int | The Identification is a unique number assigned to a datagram fragment to help in the reassembly of fragmented datagrams.
+offset | int | in units of 8 octets (64 bits) this specifies a value for each data fragment in the reassembly process. Different sized Maximum Transmission Units (MTUs) can be used throughout the Internet.
+ttl | int | The time that the datagram is allowed to exist on the network. A router that processes the packet decrements this by one. Once the value reaches 0, the packet is discarded.
+protocol | int | Layer 4 protocol sending the datagram, UDP uses the number 17, TCP uses 6, ICMP uses 1, IGRP uses 88 and OSPF uses 89.
+checksum | int | Error control for the header only.
+source | str | Source IP address
+destination | str | Destination IP address 
