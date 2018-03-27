@@ -1,4 +1,4 @@
-<h1>SerialiseNetworkCaptureFile
+<h1>SerialiseNetworkCaptureFile</h1>
 
 This program pulls the protocol headers from pcap files and writes them to
 a csv file.
