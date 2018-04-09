@@ -32,10 +32,9 @@ class SerialiseNetworkCaptureFile:
         self.pcap_filename = pcap_filename
         self.output_filename = output_filename
 
-        with open(self.pcap_path+self.pcap_filename, 'rb') as capture_file:
-            self.pcap = dpkt.pcap.Reader(capture_file)
+        self.capture_file =  open(self.pcap_path+self.pcap_filename, 'rb')
+        self.pcap = dpkt.pcap.Reader(self.capture_file)
 
-        
     #-------------------------------------------------------------------------
     def __inet_to_ip(self, address, version):
         if version == '0100':
@@ -259,8 +258,9 @@ class SerialiseNetworkCaptureFile:
 
         with open(self.output_path+self.output_filename, 'a') as text_file:
             # columns_as_string = str(columns)[1:len(str(columns))-1] + '\n'
-            print("printing columns")
+            print("Writing column headers to {}...".format(self.output_filename))
             text_file.write(columns+'\n')
+            print("Writing rows to {}...".format(self.output_filename))
             for ts,buf in self.pcap:
                 try:
                     eth = dpkt.ethernet.Ethernet(buf)
@@ -282,6 +282,8 @@ class SerialiseNetworkCaptureFile:
                 packet_as_string = (str(packet)[1:len(str(packet))-1]).replace('\'','') + '\n'
                 text_file.write(packet_as_string)
                 index += 1
+            print("Complete...")
+        self.capture_file.close()
 
 #-----------------------------------------------------------------------------
 def main():
