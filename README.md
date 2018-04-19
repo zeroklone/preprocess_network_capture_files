@@ -51,6 +51,8 @@ It is advised to use the **__pad_string** function to get the string to the nece
 
 This program uses the output of SerialiseNetworkCaptureFile. It augments the csv file with a series of features. This program removes TCP and passive traffic. Passive traffic is defined by Barry Irwin as "those packets which had the RST flag set". 
 
+
+
 Instructions:
 ```
 # Fri Feb 1 00:00:00 2013 GMT : 1359676800
@@ -69,6 +71,20 @@ augment_data(uri, new_uri)
 ```
 <h1>Additional Packet Headers</h1>
 This program does a lot of the heavy lifting for preprocessing.py. You don't need to run it directly.
+It adds the following features:
+Feature | Data Type | Description
+--- | --- | ---     
+country | str | Country of origin
+country_iso | str | Country of orgin ISO
+same_source | int | Number of packets from same IP address in last 2 seconds.
+same_destination_portion | int | Portion of packets destined for same IP address in last 2 seconds.
+diff_port_portion | int | Portion of packets destined for different TCP port in last 2 seconds.
+same_port_portion | int | Portion of packets destined for same TCP port in last 2 seconds.
+same_dest_same_port_portion | int | Portion of packets destined for same IP address and TCP port in last 2 seconds.
+same_dest_diff_port_portion | int | Portion of packets destined for same IP address  but different TCP port in last 2 seconds.
+diff_dest_same_port_portion | int | Portion of packets destined for different IP address but the same TCP port in last 2 seconds.
+sin_time | int | Time of day passed through a sine function.
+cos_time | int | Time of day passed through a cosine function.
 
 <h1>Geographic Patterns</h1>
 
