@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-
 '''
 This program pulls the protocol headers from pcap files and writes them to
 a csv file.
 
 instructions:
 
-from SerialiseNetworkCaptureFile import SerialiseNetworkCaptureFile
+from serialise_network_capture_file import SerialiseNetworkCaptureFile
 input_dirctory_name = '~/directory/containing/pcap/files/'
 input_file_name  = 'filename.pcap'
 output_directory_name = '~/directory/where/you/want/to/save/csv/'
@@ -15,6 +14,7 @@ output_file_name = 'filename.csv'
 sncf = SerialiseNetworkCaptureFile(input_dirctory_name, input_file_name, output_directory_name, output_file_name)
 sncf.serialise()
 '''
+
 __author__ = 'Motse Lehata'
 __email__ = 'mmlehata@me.com'
 
@@ -291,7 +291,7 @@ def main():
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
-    print("SerialiseNetworkCaptureFile is being run directly")
+    print("serialise_network_capture_file is being run directly")
     main()
 else:
-    print("SerialiseNetworkCaptureFile is being imported into another module")
+    print("serialise_network_capture_file is being imported into another module")

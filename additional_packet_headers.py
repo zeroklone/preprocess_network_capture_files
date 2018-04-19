@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+
+'''
+This program does a lot of the heavy lifting for preprocessing.py
+'''
+__author__ = 'Motse Lehata'
+__email__ = 'mmlehata@me.com'
 # Data structures
 import pandas as pd
 import datetime
@@ -264,7 +271,7 @@ def binary_to_int(dataframe):
     return dataframe
 #-----------------------------------------------------------------------------
 def main():
-    print("Nothing to execute...")
+    print("Read the docstring...")
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
     print("additional_packet_headers is being run directly")

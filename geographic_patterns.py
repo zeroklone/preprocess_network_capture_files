@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+'''
+Instructions:
+
+import pandas as pd
+pop_cols = ['time_stamp', 'country', 'country_iso', 'alpha_2_code']
+uri = ('preprocessing_output')
+dataframe = pd.read_csv(uri, sep=',',header=0, skipinitialspace=True, usecols=pop_cols)
+geographic_patterns(dataframe, output_uri, plot_title)
+'''
+__author__ = 'Motse Lehata'
+__email__ = 'mmlehata@me.com'
+
 # Data structures
 import pandas as pd
 from collections import OrderedDict
@@ -112,7 +125,7 @@ def geographic_patterns(dataframe, outputname, plot_title):
     show_map(country_xs, country_ys, country_colours, country_names, country_users, outputname, plot_title)
 #-----------------------------------------------------------------------------
 def main():
-    print("Nothing to execute...")
+    print("Read the docstring...")
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
     print("geographic_patterns is being run directly")

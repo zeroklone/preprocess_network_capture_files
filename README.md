@@ -1,11 +1,11 @@
-<h1>SerialiseNetworkCaptureFile</h1>
+<h1>Serialise Network Capture File</h1>
 
 This program pulls the protocol headers from pcap files and writes them to
 a csv file.
 
 Instructions:
 ```python
-from SerialiseNetworkCaptureFile import SerialiseNetworkCaptureFile
+from serialise_network_capture_file import SerialiseNetworkCaptureFile
 input_dirctory_name = '~/directory/containing/pcap/files/'
 input_file_name  = 'filename.pcap'
 output_directory_name = '~/directory/where/you/want/to/save/csv/'
@@ -14,7 +14,6 @@ output_file_name = 'filename.csv'
 sncf = SerialiseNetworkCaptureFile(input_dirctory_name, input_file_name, output_directory_name, output_file_name)
 sncf.serialise()
 ```
-
 
 
 The Ethernet frame has the following headers:
@@ -45,12 +44,12 @@ checksum | int | Error control for the header only.
 source | str | Source IP address
 destination | str | Destination IP address.
 
-All binary data is written the the csv as an int. The **__to_bits function** can be used to unpack a bit string from any given int. 
+All binary data is written to the csv as an int. The **__to_bits function** can be used to unpack a bit string from any given int. 
 It is advised to use the **__pad_string** function to get the string to the necessary length before attempting to interpret it. The bit strings are written as integers because the **read_csv()** function in the Python implementation of Pandas cannot be set to treat fields containing numbers as strings, which leads it to strip the leading zeros from bit strings.
 
-<h1>Preprocess</h1>
+<h1>Preprocessing</h1>
 
-This program uses the output of SerialiseNetworkCaptureFile. It augments the csv file with a series of features.
+This program uses the output of SerialiseNetworkCaptureFile. It augments the csv file with a series of features. This program removes TCP and passive traffic. Passive traffic is defined by Barry Irwin as "those packets which had the RST flag set". 
 
 Instructions:
 ```
@@ -68,8 +67,10 @@ filter_to_period(start, end, uri, new_uri)
 
 augment_data(uri, new_uri)
 ```
+<h1>Additional Packet Headers</h1>
+This program does a lot of the heavy lifting for preprocessing.py. You don't need to run it directly.
 
-<h1>Geagraphic Patternss</h1>
+<h1>Geographic Patterns</h1>
 
 This program uses the output of preprocessing.py to create a heatmap depicting the country of origin of each packet.
 
@@ -84,3 +85,4 @@ dataframe = pd.read_csv(uri, sep=',',header=0, skipinitialspace=True, usecols=po
 geographic_patterns(dataframe, output_uri, plot_title)
 
 ```
+

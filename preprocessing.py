@@ -1,4 +1,27 @@
 #!/usr/bin/env python3
+'''
+This program uses the output of SerialiseNetworkCaptureFile. It augments the csv file with a series of features.
+
+Instructions:
+
+# Fri Feb 1 00:00:00 2013 GMT : 1359676800
+# Thu Aug 1 00:00:00 2013 GMT : 1375315200
+start = 1375315200
+# Wed May 1 00:00:00 2013 GMT : 1367366400
+# Fri Nov 1 00:00:00 2013 GMT : 1383264000
+end = 1383264000
+
+uri = ('SerialiseNetworkCaptureFile_output')
+new_uri = ('output_file')
+
+filter_to_period(start, end, uri, new_uri)
+
+augment_data(uri, new_uri)
+'''
+
+__author__ = 'Motse Lehata'
+__email__ = 'mmlehata@me.com'
+
 # Data structures
 import pandas as pd
 import datetime
@@ -209,7 +232,7 @@ def augment_data(uri, new_uri):
     
 #-----------------------------------------------------------------------------  
 def main():
-    print("Nothing to run...")
+    print("Read the docstring...")
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
     print("preprocessing is being run directly")
