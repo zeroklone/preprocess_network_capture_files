@@ -74,7 +74,7 @@ This program does a lot of the heavy lifting for preprocessing.py. You don't nee
 It adds the following features:
 
 Feature | Data Type | Description
---- | --- | ---     
+--- | --- | ---
 country | str | Country of origin
 country_iso | str | Country of orgin ISO
 same_source | int | Number of packets from same IP address in last 2 seconds.
