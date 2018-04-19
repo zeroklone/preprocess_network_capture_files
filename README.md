@@ -46,4 +46,41 @@ source | str | Source IP address
 destination | str | Destination IP address.
 
 All binary data is written the the csv as an int. The **__to_bits function** can be used to unpack a bit string from any given int. 
-It is advised to use the **__pad_string** function to get the string to the necessary length before attempting to interpret it. The bit strings are written as integers because the **read_csv()** function in the Python implementation of Pandas cannot be set to treat fields containing numbers as strings, which leads it to strip the leading zeros from bit strings. 
+It is advised to use the **__pad_string** function to get the string to the necessary length before attempting to interpret it. The bit strings are written as integers because the **read_csv()** function in the Python implementation of Pandas cannot be set to treat fields containing numbers as strings, which leads it to strip the leading zeros from bit strings.
+
+<h1>Preprocess</h1>
+
+This program uses the output of SerialiseNetworkCaptureFile. It augments the csv file with a series of features.
+
+Instructions:
+```
+# Fri Feb 1 00:00:00 2013 GMT : 1359676800
+# Thu Aug 1 00:00:00 2013 GMT : 1375315200
+start = 1375315200
+# Wed May 1 00:00:00 2013 GMT : 1367366400
+# Fri Nov 1 00:00:00 2013 GMT : 1383264000
+end = 1383264000
+
+uri = ('SerialiseNetworkCaptureFile_output')
+new_uri = ('output_file')
+
+filter_to_period(start, end, uri, new_uri)
+
+augment_data(uri, new_uri)
+```
+
+<h1>Geagraphic Patternss</h1>
+
+This program uses the output of preprocessing.py to create a heatmap depicting the country of origin of each packet.
+
+Instructions:
+
+```
+import pandas as pd
+pop_cols = ['time_stamp', 'country', 'country_iso', 'alpha_2_code']
+uri = ('preprocessing_output')
+dataframe = pd.read_csv(uri, sep=',',header=0, skipinitialspace=True, usecols=pop_cols)
+
+geographic_patterns(dataframe, output_uri, plot_title)
+
+```
