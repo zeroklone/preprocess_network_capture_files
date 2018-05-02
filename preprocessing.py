@@ -49,7 +49,7 @@ def get_alpha_code(column):
     return result
 #-----------------------------------------------------------------------------
 def set_well_known(number):
-    if number in range(1,20):
+    if number in range(1,1024):
         return 1
     else:
         return 0
